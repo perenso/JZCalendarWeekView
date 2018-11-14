@@ -360,8 +360,9 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
                             nonWorkingHoursBackgroundHeight = hourHeight - (hourHeight * CGFloat((workDay!.startTime.timeIntervalSince(startTime) / endTime.timeIntervalSince(startTime))))
                         }
                         else if (startTime > workDay!.startTime && endTime > workDay!.endTime) {
-                            nonWorkingHoursBackgroundMinY += hourHeight * CGFloat((workDay!.endTime.timeIntervalSince(startTime) / endTime.timeIntervalSince(startTime)))
-                            nonWorkingHoursBackgroundHeight = hourHeight - nonWorkingHoursBackgroundMinY
+                            let workingHourHeight = hourHeight * CGFloat((workDay!.endTime.timeIntervalSince(startTime) / endTime.timeIntervalSince(startTime)))
+                            nonWorkingHoursBackgroundMinY += workingHourHeight
+                            nonWorkingHoursBackgroundHeight = hourHeight - workingHourHeight
                         }
                     }
                 }
