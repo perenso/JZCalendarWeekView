@@ -153,8 +153,17 @@ open class JZLongPressWeekView: JZBaseWeekView {
     
     /// Updating time label in longPressView during dragging
     private func updateTimeLabel(time: Date, pointInSelfView: CGPoint) {
+        updateTimeLabelText(time: time)
+        updateTimeLabelPosition(pointInSelfView: pointInSelfView)
+    }
+    
+    /// Update time label content, this method can be overridden
+    open func updateTimeLabelText(time: Date) {
         longPressTimeLabel.text = time.getTimeIgnoreSecondsFormat()
-        
+    }
+    
+    /// Update the position for the time label
+    private func updateTimeLabelPosition(pointInSelfView: CGPoint) {
         let isOutsideLeftMargin = pointInSelfView.x - pressPosition!.xToViewLeft < longPressLeftMarginX
         longPressTimeLabel.textAlignment = isOutsideLeftMargin ? .right : .left
         
@@ -210,15 +219,22 @@ open class JZLongPressWeekView: JZBaseWeekView {
             }
             
         } else {
+            var contentOffsetX: CGFloat
             switch scrollType! {
             case .sectionScroll:
                 let sectionWidth = flowLayout.sectionWidth!
                 scrollSections = direction == .left ? -1 : 1
-                collectionView.setContentOffset(CGPoint(x: currentOffset.x - sectionWidth * scrollSections, y: currentOffset.y), animated: true)
+                contentOffsetX = currentOffset.x - sectionWidth * scrollSections
             case .pageScroll:
-                let contentViewWidth = frame.width - flowLayout.rowHeaderWidth
-                let contentOffsetX = direction == .left ? contentViewWidth * 2 : 0
-                collectionView.setContentOffset(CGPoint(x: contentOffsetX, y: currentOffset.y), animated: true)
+                contentOffsetX = direction == .left ? contentViewWidth * 2 : 0
+            }
+            // Take the horizontal scrollable edges into account
+            let contentOffsetXWithScrollableEdges = min(max(contentOffsetX, scrollableEdges.leftX ?? -1), scrollableEdges.rightX ?? CGFloat.greatestFiniteMagnitude)
+            if contentOffsetXWithScrollableEdges == currentOffset.x {
+                // scrollViewDidEndScrollingAnimation will not be called
+                isScrolling = false
+            } else {
+                collectionView.setContentOffset(CGPoint(x: contentOffsetXWithScrollableEdges, y: currentOffset.y), animated: true)
             }
         }
         // must set initial contentoffset because willBeginDragging will not be called
@@ -267,7 +283,7 @@ open class JZLongPressWeekView: JZBaseWeekView {
     /// Overload for base class with left and right margin check for LongPress
     open func getDateForX(xCollectionView: CGFloat, xSelfView: CGFloat) -> Date {
         let section = Int((xCollectionView - flowLayout.rowHeaderWidth) / flowLayout.sectionWidth)
-        let date = Calendar.current.date(from: flowLayout.daysForSection(section))!
+        let date = getDateForSection(section)
         // when isScrolling equals true, means it will scroll to previous date
         if xSelfView < longPressLeftMarginX && isScrolling == false {
             return date.add(component: .day, value: 1)
