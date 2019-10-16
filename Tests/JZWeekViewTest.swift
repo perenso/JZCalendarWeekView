@@ -99,8 +99,8 @@ class JZWeekViewTest: XCTestCase {
                     if let startDate = startDate, let endDate = endDate {
                         // out of range
                         if startDate > currentPageLastDate || endDate < currentPageFirstDate {
-                            XCTAssertEqual(longPressView.scrollableEdges.leftX, longPressView.contentViewWidth, "\(startDate, endDate)")
-                            XCTAssertEqual(longPressView.scrollableEdges.rightX, longPressView.contentViewWidth, "\(startDate, endDate)")
+                            XCTAssertEqual(longPressView.scrollableEdges.leftX, longPressView.contentViewWidth, "\((startDate, endDate))")
+                            XCTAssertEqual(longPressView.scrollableEdges.rightX, longPressView.contentViewWidth, "\((startDate, endDate))")
                             continue
                         }
                         
@@ -141,10 +141,10 @@ class JZWeekViewTest: XCTestCase {
                     if let startDate = startDate {
                         // out of range
                         if startDate > currentPageLastDate {
-                            XCTAssertEqual(longPressView.scrollableEdges.leftX, longPressView.contentViewWidth, "\(startDate, endDate)")
-                            XCTAssertEqual(longPressView.scrollableEdges.rightX, longPressView.contentViewWidth, "\(startDate, endDate)")
+                            XCTAssertEqual(longPressView.scrollableEdges.leftX, longPressView.contentViewWidth, "\((startDate, endDate))")
+                            XCTAssertEqual(longPressView.scrollableEdges.rightX, longPressView.contentViewWidth, "\((startDate, endDate))")
                         } else if startDate >= currentPageFirstDate {
-                            XCTAssertEqual(longPressView.scrollableEdges.leftX, longPressView.contentViewWidth, "\(startDate, endDate)")
+                            XCTAssertEqual(longPressView.scrollableEdges.leftX, longPressView.contentViewWidth, "\((startDate, endDate))")
                             XCTAssertNil(longPressView.scrollableEdges.rightX, "nil")
                         } else {
                             if longPressView.scrollType == .pageScroll {
@@ -164,11 +164,11 @@ class JZWeekViewTest: XCTestCase {
                     if let endDate = endDate {
                         // out of range
                         if endDate < currentPageFirstDate {
-                            XCTAssertEqual(longPressView.scrollableEdges.leftX, longPressView.contentViewWidth, "\(startDate, endDate)")
-                            XCTAssertEqual(longPressView.scrollableEdges.rightX, longPressView.contentViewWidth, "\(startDate, endDate)")
+                            XCTAssertEqual(longPressView.scrollableEdges.leftX, longPressView.contentViewWidth, "\((startDate, endDate))")
+                            XCTAssertEqual(longPressView.scrollableEdges.rightX, longPressView.contentViewWidth, "\((startDate, endDate))")
                         } else if endDate <= currentPageLastDate {
                             XCTAssertNil(longPressView.scrollableEdges.leftX, "nil")
-                            XCTAssertEqual(longPressView.scrollableEdges.rightX, longPressView.contentViewWidth, "\(startDate, endDate)")
+                            XCTAssertEqual(longPressView.scrollableEdges.rightX, longPressView.contentViewWidth, "\((startDate, endDate))")
                         } else {
                             XCTAssertNil(longPressView.scrollableEdges.leftX, "nil")
                             if longPressView.scrollType == .pageScroll {
