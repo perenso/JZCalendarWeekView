@@ -6,6 +6,7 @@ Pod::Spec.new do |s|
   s.license      = { :type => "MIT", :file => "LICENSE" }
   s.author       = { "Jeff Zhang" => "zekejeff@gmail.com" }
   s.platform     = :ios, "9.0"
+  s.swift_version = '5.0'
   s.source = { :git => "https://github.com/zjfjack/JZCalendarWeekView.git", :tag => s.version }
   s.source_files  = "JZCalendarWeekView/**/*.swift"
 end
