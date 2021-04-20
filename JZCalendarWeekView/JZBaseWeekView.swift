@@ -134,9 +134,9 @@ open class JZBaseWeekView: UIView {
         var sectionWidth = contentViewWidth / CGFloat(numOfDays)
         let remainder = sectionWidth.truncatingRemainder(dividingBy: 1)
         switch remainder {
-        case 0...0.25:
+        case 0...0.5:
             sectionWidth = sectionWidth.rounded(.down)
-        case 0.25...0.75:
+        case 0.5...1:
             sectionWidth = sectionWidth.rounded(.down) + 0.5
         default:
             sectionWidth = sectionWidth.rounded(.up)
