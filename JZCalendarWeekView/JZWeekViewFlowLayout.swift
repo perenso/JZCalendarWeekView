@@ -6,7 +6,7 @@
 //  Inspired and followed by WRCalendarView (https://github.com/wayfinders/WRCalendarView)
 //
 
-public protocol WeekViewFlowLayoutDelegate: class {
+public protocol WeekViewFlowLayoutDelegate: AnyObject {
     /// Get the date for given section
     func collectionView(_ collectionView: UICollectionView, layout: JZWeekViewFlowLayout, dayForSection section: Int) -> Date
     /// Get the work day for given section
