@@ -264,10 +264,11 @@ open class JZLongPressWeekView: JZBaseWeekView {
     }
     
     /// Initialise the long press view with longPressTimeLabel.
-    open func initLongPressView(selectedCell: UICollectionViewCell?, type: LongPressType, startDate: Date) -> UIView {
-        
-        let longPressView = type == .move ? longPressDataSource!.weekView(self, movingCell: selectedCell!, viewForMoveLongPressAt: startDate) :
-                                            longPressDataSource!.weekView(self, viewForAddNewLongPressAt: startDate)
+    open func initLongPressView(selectedCell: UICollectionViewCell?, type: LongPressType, startDate: Date) -> UIView? {
+        guard let longPressView = type == .move ? longPressDataSource?.weekView(self, movingCell: selectedCell!, viewForMoveLongPressAt: startDate) :
+                longPressDataSource?.weekView(self, viewForAddNewLongPressAt: startDate) else {
+            return nil
+        }
         longPressView.clipsToBounds = false
         
         //timeText width will change from 00:00 - 24:00, and for each time the length will be different
