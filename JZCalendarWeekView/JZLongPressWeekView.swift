@@ -84,7 +84,7 @@ open class JZLongPressWeekView: JZBaseWeekView {
     /// This structure is used to save editing information before reusing collectionViewCell (Type Move used only)
     private struct CurrentEditingInfo {
         /// The editing event when move type long press(used to be currentMovingCell, it is a reference of cell but item will be reused in CollectionView!!)
-        var event: JZBaseEvent!
+        var event: JZBaseEvent?
         /// The editing cell original size, get it from the long press status began
         var cellSize: CGSize!
         /// (REPLACED THIS ONE WITH EVENT ID NOW) Save current indexPath to check whether a cell is the previous one ()
@@ -265,7 +265,7 @@ open class JZLongPressWeekView: JZBaseWeekView {
     
     /// Initialise the long press view with longPressTimeLabel.
     open func initLongPressView(selectedCell: UICollectionViewCell?, type: LongPressType, startDate: Date) -> UIView? {
-        guard let longPressView = type == .move ? longPressDataSource?.weekView(self, movingCell: selectedCell!, viewForMoveLongPressAt: startDate) :
+        guard let longPressView = type == .move ? (selectedCell != nil ? longPressDataSource?.weekView(self, movingCell: selectedCell!, viewForMoveLongPressAt: startDate) : nil) :
                 longPressDataSource?.weekView(self, viewForAddNewLongPressAt: startDate) else {
             return nil
         }
@@ -334,7 +334,7 @@ open class JZLongPressWeekView: JZBaseWeekView {
     /// Use the event id to check the cell item is the original cell
     private func isOriginalMovingCell(_ cell: UICollectionViewCell) -> Bool {
         let jzCell = cell as! JZLongPressEventCell
-        return jzCell.event.id == currentEditingInfo.event.id
+        return jzCell.event.id == currentEditingInfo.event?.id
     }
     
      /*** Because of reusability, we set some cell contentViews to translucent, then when those views are reused, if you don't scroll back
@@ -430,7 +430,7 @@ extension JZLongPressWeekView: UIGestureRecognizerDelegate {
             longPressView?.center = CGPoint(x: pointInSelfView.x - (pressPosition?.xToViewLeft ?? 0) + currentEditingInfo.cellSize.width/2,
                                            y: pointInSelfView.y - (pressPosition?.yToViewTop ?? 0) + currentEditingInfo.cellSize.height/2)
             if currentLongPressType == .move {
-                currentEditingInfo.event = (currentMovingCell as! JZLongPressEventCell).event
+                currentEditingInfo.event = (currentMovingCell as? JZLongPressEventCell)?.event
                 getCurrentMovingCells().forEach {
                     $0.contentView.layer.opacity = movingCellOpacity
                     currentEditingInfo.allOpacityContentViews.append($0.contentView)
@@ -463,8 +463,8 @@ extension JZLongPressWeekView: UIGestureRecognizerDelegate {
             if let longPressViewStartDate = longPressViewStartDate {
                 if currentLongPressType == .addNew {
                     longPressDelegate?.weekView(self, didEndAddNewLongPressAt: longPressViewStartDate)
-                } else if currentLongPressType == .move {
-                    longPressDelegate?.weekView(self, editingEvent: currentEditingInfo.event, didEndMoveLongPressAt: longPressViewStartDate)
+                } else if currentLongPressType == .move, let event = currentEditingInfo.event {
+                    longPressDelegate?.weekView(self, editingEvent: event, didEndMoveLongPressAt: longPressViewStartDate)
                 }
             }
         }
